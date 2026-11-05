@@ -1,0 +1,14 @@
+[Unit]
+Description=ServerHeartBeat
+After=network.target
+
+[Service]
+Type=simple
+User=appsvc
+ExecStart=/opt/myapp/heartbeat.sh
+Restart=on-failure
+# restart only if it crashes, not when you stop it
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
