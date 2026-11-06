@@ -69,3 +69,38 @@ sudo chmod 640 /etc/myapp/app.conf
 ```
 systemctl status myapp.service
 ```
+============== Disk full ===========
+
+The following steps should be taken to troubleshoot the error `Disk is full`
+3.1 Check how many free space left on the disk:
+```
+$ df -h
+```
+3.2 Lets assume the filesystem `/dev/mapper/rl-root`corresponding with the root disk `/`is used on 100%.
+
+3.3 Identify top 10 files and folders in the root directory that consume the most part of space:
+```
+sudo du / -ha -d 1 2>/dev.null | sort -hr | head 10
+```
+NOTE: Make sure the command `du` is always ran under root or sudo to be sure that all folders are counted. Otherwise, some files and folders may not be counted in the disk usage.
+
+3.4 Lets assume the folder `/home` is the biggest one.
+
+3.5 Identify top 10 files and folders in the `/home` directory that consume the most part of space:
+```
+sudo du /home -ha -d 1 2>/dev.null | sort -hr | head 10
+```
+
+3.6 Repeat step 1.5 for all subfolders (replace `/home` with the correct path like `/home/.../...`)
+
+3.7 Lets assume the subfolder `/home/user1/home-video` is the biggest one and the subfolder `/home/user1/home-video` is desided to be deleted.
+
+3.8 Delete the subfolder `/home/user1/home-video` and its content:
+```
+sudo rm -rf /home/user1/home-video
+```
+
+3.9 Verify the root directory has sufficient space:
+```
+$ df -h
+```
