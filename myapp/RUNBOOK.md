@@ -2,7 +2,8 @@
 // The Language locale to use when spell checking. "en", "en-US" and "en-GB" are currently supported by default.
 "cSpell.language": "en",
 
-==================== Service won't start =========================
+=============== Service won't start ====================
+
 1. Verify the service state error using the command:
 ```
 systemctl status myapp.service
