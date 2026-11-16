@@ -2,7 +2,7 @@
 // The Language locale to use when spell checking. "en", "en-US" and "en-GB" are currently supported by default.
 "cSpell.language": "en",
 
-=============== Service won't start ====================
+## Service won't start
 
 1. Verify the service state error using the command:
 ```
@@ -74,7 +74,7 @@ sudo chmod 640 /etc/myapp/app.conf
 ```
 systemctl status myapp.service
 ```
-============== Disk full ===========
+## Disk full
 
 The following steps should be taken to troubleshoot the error `Disk is full`
 3.1 Check how many free space left on the disk:
@@ -164,4 +164,4 @@ sudo rm -rf /home/user1/home-video
 $ df -h
 ```
 
-=========== Process stuck in D state ==========
+## Process stuck in D state
