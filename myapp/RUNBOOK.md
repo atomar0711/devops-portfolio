@@ -165,3 +165,43 @@ $ df -h
 ```
 
 ## Process stuck in D state
+
+## Understanding systemctl status after the service died
+
+The following scenario should be used to check the status why the service dead:
+5.1 Check the service status:
+```
+systemctl status myapp --no-pager | head -8
+```
+5.2 Look for the following string in the output:
+`Active:` - indicates the current state of service
+`Main PID:` - indicates the process ID and why it was stopped
+
+5.2.1 If another process or user terminated the process associated with the service, the following records are displayed:
+`Active: inactive (dead)`
+`Main PID: PID (code=killed, signal=TERM)`
+
+After the signal `TERM`, the service doesn't start automatically since this signal means that the process was terminated intentionally.
+
+5.2.2 If another process or user forcefully terminated (killed) the process associated with the service, the following records are displayed:
+`Active: activating (auto-restart) (Result: signal)`
+`Main PID: PID (code=killed, signal=KILL)`
+
+After the signal `KILL`, the service starts automatically since this signal means that the process was terminated unexpectedly.
+
+5.2.3 If the process associated with the service is stopped due to an internal error, the following records may be displayed:
+`Main PID: PID (code=killed, signal=1/FAILURE)` - see 2.2 for additional information
+`Main PID: PID (code=killed, signal=203/EXEC)` - see 2.1 for additional information
+
+After the internal signal, the service starts automatically since this signal means that the process was terminated unexpectedly
+
+5.3 Table for quick reference:
+┌──────────────────┬────────────────────────────────────────────────────────────────────────┬───────────────────────┐
+│      Death       │                              status shows                              │ on-failure restarts?  │
+├──────────────────┼────────────────────────────────────────────────────────────────────────┼───────────────────────┤
+│ kill -15         │ ○ inactive (dead), code=killed, signal=TERM                            │ no (clean stop)       │
+├──────────────────┼────────────────────────────────────────────────────────────────────────┼───────────────────────┤
+│ kill -9          │ ● activating (auto-restart) (Result: signal), code=killed, signal=KILL │ yes, after RestartSec │
+├──────────────────┼────────────────────────────────────────────────────────────────────────┼───────────────────────┤
+│ app calls exit 1 │ code=exited, status=1/FAILURE                                          │ yes                   │
+└──────────────────┴────────────────────────────────────────────────────────────────────────┴───────────────────────┘
